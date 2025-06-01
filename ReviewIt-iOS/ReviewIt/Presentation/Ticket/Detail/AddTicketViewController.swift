@@ -11,8 +11,20 @@ import PhotosUI
 import SnapKit
 import Then
 
-final class AddTicketViewController: BaseViewController {
+final class AddTicketViewController: UIViewController {
+    
+    var seatFloor = "1"
+    var seatSection = "A"
+    var seatRow = "1"
+    var seatNum = "1"
+    
+    let floorList = Array(1...5).map { "\($0)" }
+    let sectionList = ["A", "B", "C", "D", "E", "F", "G", "1", "2", "3", "4", "5", "6", "7", "8"]
+    let rowList = Array(0...8).map { "\($0)" }
+    let numList = Array(1...999).map { "\($0)" }
+    
     let datePicker = UIDatePicker()
+    let seatPickerView = UIPickerView()
     
     let titleView = TitleView(title: StringLiterals.TicketDetail.title,
                               isLeftButtonHidden: false,
@@ -29,10 +41,10 @@ final class AddTicketViewController: BaseViewController {
     
     let seatLabel = UILabel()
     let seatStackView = UIStackView()
-    let seatFloorLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 11, left: 9, bottom: 11, right: 9))
-    let seatSectionLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 11, left: 9, bottom: 11, right: 9))
-    let seatRowLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 11, left: 9, bottom: 11, right: 9))
-    let seatNumLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 11, left: 9, bottom: 11, right: 9))
+    let seatFloorTextField = TicketInputTextField()
+    let seatSectionTextField = TicketInputTextField()
+    let seatRowTextField = TicketInputTextField()
+    let seatNumTextField = TicketInputTextField()
     
     let platformTextField = TicketInputTextField(title: StringLiterals.TicketDetail.platformPlaceHolder)
     let priceTextField = TicketInputTextField(title: StringLiterals.TicketDetail.pricePlaceHolder)
@@ -43,11 +55,21 @@ final class AddTicketViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
+        setDelegate()
+        setAddTarget()
+        hideKeyboardWhenTappedAround()
         setupToolBar()
         setupDatePicker()
+        setupSeatPicker()
     }
     
-    override func setStyle() {
+    private func setUI() {
+        setStyle()
+        setLayout()
+    }
+    
+    private func setStyle() {
         self.view.backgroundColor = .mainWhite
         
         titleLabel.do {
@@ -84,37 +106,42 @@ final class AddTicketViewController: BaseViewController {
             $0.textColor = .mainBlack
         }
         
-        seatFloorLabel.do {
-            $0.text = "1층"
-            $0.textColor = .mainBlack
-            $0.font = .fontReviewIT(.body_semibold_15)
-            $0.setRoundBorder(borderColor: .subGray1, borderWidth: 1, cornerRadius: 10)
+        seatFloorTextField.do {
+            $0.text = "\(seatFloor)층"
+            $0.textAlignment = .center
+            $0.addPadding(left: 9, right: 9)
+            $0.tag = 0
+            $0.tintColor = .clear
         }
         
-        seatSectionLabel.do {
-            $0.text = "A구역"
-            $0.textColor = .mainBlack
-            $0.font = .fontReviewIT(.body_semibold_15)
-            $0.setRoundBorder(borderColor: .subGray1, borderWidth: 1, cornerRadius: 10)
+        seatSectionTextField.do {
+            $0.text = "\(seatSection)구역"
+            $0.textAlignment = .center
+            $0.addPadding(left: 9, right: 9)
+            $0.tag = 1
+            $0.tintColor = .clear
         }
         
-        seatRowLabel.do {
-            $0.text = "1열"
-            $0.textColor = .mainBlack
-            $0.font = .fontReviewIT(.body_semibold_15)
-            $0.setRoundBorder(borderColor: .subGray1, borderWidth: 1, cornerRadius: 10)
+        seatRowTextField.do {
+            $0.text = "\(seatRow)열"
+            $0.textAlignment = .center
+            $0.addPadding(left: 9, right: 9)
+            $0.tag = 2
+            $0.tintColor = .clear
         }
         
-        seatNumLabel.do {
-            $0.text = "1번"
-            $0.textColor = .mainBlack
-            $0.font = .fontReviewIT(.body_semibold_15)
-            $0.setRoundBorder(borderColor: .subGray1, borderWidth: 1, cornerRadius: 10)
+        seatNumTextField.do {
+            $0.text = "\(seatNum)번"
+            $0.textAlignment = .center
+            $0.addPadding(left: 9, right: 9)
+            $0.tag = 3
+            $0.tintColor = .clear
         }
         
         seatStackView.do {
             $0.axis = .horizontal
             $0.spacing = 8
+            $0.isUserInteractionEnabled = true
         }
         
         bottomView.do {
@@ -139,7 +166,7 @@ final class AddTicketViewController: BaseViewController {
         }
     }
     
-    override func setLayout() {
+    private func setLayout() {
         
         view.addSubviews(scrollView,
                          titleView,
@@ -156,10 +183,10 @@ final class AddTicketViewController: BaseViewController {
                                platformTextField,
                                priceTextField)
         
-        seatStackView.addArrangedSubviews(seatFloorLabel,
-                                          seatSectionLabel,
-                                          seatRowLabel,
-                                          seatNumLabel)
+        seatStackView.addArrangedSubviews(seatFloorTextField,
+                                          seatSectionTextField,
+                                          seatRowTextField,
+                                          seatNumTextField)
         
         posterImageView.addSubviews(emptyImageView)
         
@@ -247,6 +274,21 @@ final class AddTicketViewController: BaseViewController {
             $0.leading.equalTo(titleTextField)
         }
         
+        seatFloorTextField.snp.makeConstraints {
+            $0.height.equalTo(43)
+        }
+        
+        seatSectionTextField.snp.makeConstraints {
+            $0.height.equalTo(43)
+        }
+        
+        seatRowTextField.snp.makeConstraints {
+            $0.height.equalTo(43)
+        }
+        seatNumTextField.snp.makeConstraints {
+            $0.height.equalTo(43)
+        }
+        
         platformTextField.snp.makeConstraints {
             $0.top.equalTo(seatStackView.snp.bottom).offset(16)
             $0.leading.trailing.width.equalTo(titleTextField)
@@ -261,7 +303,14 @@ final class AddTicketViewController: BaseViewController {
         }
     }
     
-    override func setAddTarget() {
+    private func setDelegate() {
+        seatFloorTextField.delegate = self
+        seatSectionTextField.delegate = self
+        seatRowTextField.delegate = self
+        seatNumTextField.delegate = self
+    }
+    
+    private func setAddTarget() {
         titleView.leftButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         laterButton.addTarget(self, action: #selector(laterButtonTapped), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
@@ -309,7 +358,6 @@ final class AddTicketViewController: BaseViewController {
     }
     
     private func setupToolBar() {
-        
         let toolBar = UIToolbar()
 
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -324,6 +372,126 @@ final class AddTicketViewController: BaseViewController {
     @objc func doneButtonHandeler(_ sender: UIBarButtonItem) {
         dateTextField.text = DateFormatter.ticketDisplayFormatter.string(from: datePicker.date)
         dateTextField.resignFirstResponder()
+    }
+    
+    @objc func setupSeatPicker() {
+        seatPickerView.dataSource = self
+        seatPickerView.delegate = self
+        
+        let toolBar = UIToolbar()
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(onPickDone))
+        toolBar.items = [flexibleSpace, doneButton]
+        toolBar.sizeToFit()
+        
+        seatFloorTextField.inputAccessoryView = toolBar
+        seatSectionTextField.inputAccessoryView = toolBar
+        seatRowTextField.inputAccessoryView = toolBar
+        seatNumTextField.inputAccessoryView = toolBar
+
+        seatFloorTextField.inputView = seatPickerView
+        seatSectionTextField.inputView = seatPickerView
+        seatRowTextField.inputView = seatPickerView
+        seatNumTextField.inputView = seatPickerView
+    }
+    
+    @objc func onPickDone() {
+        seatFloorTextField.text = "\(seatFloor)층"
+        seatSectionTextField.text = "\(seatSection)구역"
+        seatRowTextField.text = "\(seatRow)열"
+        seatNumTextField.text = "\(seatNum)번"
+        
+        seatFloorTextField.resignFirstResponder()
+    }
+}
+
+extension AddTicketViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        switch textField {
+        case seatFloorTextField:
+            seatPickerView.tag = 0
+            seatPickerView.reloadAllComponents()
+            if let index = floorList.firstIndex(of: seatFloor) {
+                seatPickerView.selectRow(index, inComponent: 0, animated: false)
+            }
+        case seatSectionTextField:
+            seatPickerView.tag = 1
+            seatPickerView.reloadAllComponents()
+            if let index = sectionList.firstIndex(of: seatSection) {
+                seatPickerView.selectRow(index, inComponent: 0, animated: false)
+            }
+        case seatRowTextField:
+            seatPickerView.tag = 2
+            seatPickerView.reloadAllComponents()
+            if let index = rowList.firstIndex(of: seatRow) {
+                seatPickerView.selectRow(index, inComponent: 0, animated: false)
+            }
+        case seatNumTextField:
+            seatPickerView.tag = 3
+            seatPickerView.reloadAllComponents()
+            if let index = numList.firstIndex(of: seatNum) {
+                seatPickerView.selectRow(index, inComponent: 0, animated: false)
+            }
+        default:
+            break
+        }
+    }
+}
+
+extension AddTicketViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch pickerView.tag {
+        case 0:
+            return floorList.count
+        case 1:
+            return sectionList.count
+        case 2:
+            return rowList.count
+        case 3:
+            return numList.count
+        default:
+            return 0
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch pickerView.tag {
+           case 0:
+               return "\(floorList[row])층"
+           case 1:
+               return "\(sectionList[row])구역"
+           case 2:
+               return "\(rowList[row])열"
+           case 3:
+               return "\(numList[row])번"
+           default:
+               return ""
+           }
+       }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch pickerView.tag {
+        case 0:
+            seatFloor = floorList[row]
+        case 1:
+            seatSection = (sectionList[row])
+        case 2:
+            seatRow = (rowList[row])
+        case 3:
+            seatNum = (numList[row])
+        default:
+            break
+        }
     }
 }
 
