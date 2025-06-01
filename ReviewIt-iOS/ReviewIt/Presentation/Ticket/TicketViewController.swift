@@ -109,16 +109,25 @@ final class TicketViewController: BaseViewController {
                                   for: .touchUpInside)
     }
     
+    private func setCollectionView() {
+        ticketCollectionView.delegate = self
+        ticketCollectionView.dataSource = self
+        ticketCollectionView.register(TicketCollectionViewCell.self, forCellWithReuseIdentifier: TicketCollectionViewCell.className)
+    }
+    
     @objc private func pushAddTicketViewController() {
         let addTicketViewController = AddTicketViewController()
         addTicketViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(addTicketViewController, animated: true)
     }
-    
-    private func setCollectionView() {
-        ticketCollectionView.delegate = self
-        ticketCollectionView.dataSource = self
-        ticketCollectionView.register(TicketCollectionViewCell.self, forCellWithReuseIdentifier: TicketCollectionViewCell.className)
+
+    @objc private func pushToDetail(_ sender: UITapGestureRecognizer) {
+//        guard let cell = sender.view as? TicketCollectionViewCell
+//        let indexPath = ticketCollectionView.indexPath(for: cell) else { return }
+//        let id = chatRoomListData[indexPath.row].id
+        let ticketDetailViewController = TicketDetailViewController()
+        ticketDetailViewController.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(ticketDetailViewController, animated: true)
     }
 }
 
@@ -134,6 +143,8 @@ extension TicketViewController: UICollectionViewDataSource {
             withReuseIdentifier: TicketCollectionViewCell.className,
             for: indexPath) as? TicketCollectionViewCell else { return UICollectionViewCell() }
         cell.configTicketCell(data: ticketList[indexPath.item])
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushToDetail(_:)))
+        cell.addGestureRecognizer(tapGesture)
         return cell
     }
 }
