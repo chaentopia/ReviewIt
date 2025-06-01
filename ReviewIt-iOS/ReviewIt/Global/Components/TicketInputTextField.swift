@@ -35,7 +35,7 @@ final class TicketInputTextField: UITextField {
     private func setStyle() {
         self.do {
             $0.font = .fontReviewIT(.body_semibold_15)
-            $0.textColor = .subGray1
+            $0.textColor = .mainBlack
             $0.textAlignment = .left
             $0.autocapitalizationType = .none
             $0.autocorrectionType = .no
