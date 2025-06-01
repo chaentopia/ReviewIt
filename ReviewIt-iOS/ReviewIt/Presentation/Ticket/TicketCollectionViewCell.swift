@@ -14,6 +14,9 @@ final class TicketCollectionViewCell: UICollectionViewCell {
     /// 리뷰완료 - true, 리뷰 전 - false
     var reviewStatus = false
     
+    var actorList: [String] = []
+    var reviewList: [String] = []
+    
     let titleLabel = UILabel()
     let reviewTag = BasePaddingLabel()
     let dateLabel = UILabel()
@@ -32,11 +35,13 @@ final class TicketCollectionViewCell: UICollectionViewCell {
         frame: .zero,
         collectionViewLayout: reviewFlowLayout
     )
+    
     private let reviewFlowLayout = UICollectionViewFlowLayout()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
+        setCollectionView()
     }
     
     required init?(coder: NSCoder) {
@@ -88,10 +93,30 @@ final class TicketCollectionViewCell: UICollectionViewCell {
             $0.text = StringLiterals.TicketMain.actor
         }
         
+        actorCollectionView.do {
+            $0.tag = 1
+            $0.showsHorizontalScrollIndicator = false
+        }
+        
+        actorFlowLayout.do {
+            $0.scrollDirection = .horizontal
+            $0.minimumLineSpacing = 5
+        }
+        
         reviewLabel.do {
             $0.font = .fontReviewIT(.body_semibold_12)
             $0.textColor = .mainBlack
             $0.text = StringLiterals.TicketMain.summary
+        }
+        
+        reviewCollectionView.do {
+            $0.tag = 2
+            $0.showsHorizontalScrollIndicator = false
+        }
+        
+        reviewFlowLayout.do {
+            $0.scrollDirection = .horizontal
+            $0.minimumLineSpacing = 5
         }
     }
     
@@ -145,6 +170,8 @@ final class TicketCollectionViewCell: UICollectionViewCell {
         actorCollectionView.snp.makeConstraints {
             $0.centerY.equalTo(actorLabel)
             $0.leading.equalTo(actorLabel.snp.trailing).offset(12)
+            $0.trailing.equalTo(reviewTag)
+            $0.height.equalTo(29)
         }
         
         reviewLabel.snp.makeConstraints {
@@ -154,9 +181,21 @@ final class TicketCollectionViewCell: UICollectionViewCell {
         
         reviewCollectionView.snp.makeConstraints {
             $0.centerY.equalTo(reviewLabel)
-            $0.leading.equalTo(reviewLabel.snp.trailing).offset(12)
+            $0.leading.equalTo(actorCollectionView)
+            $0.trailing.equalTo(reviewTag)
+            $0.height.equalTo(29)
         }
     }
+    
+    private func setCollectionView() {
+        actorCollectionView.delegate = self
+        actorCollectionView.dataSource = self
+        reviewCollectionView.delegate = self
+        reviewCollectionView.dataSource = self
+        actorCollectionView.register(TicketMainPreviewCollectionViewCell.self, forCellWithReuseIdentifier: TicketMainPreviewCollectionViewCell.className)
+        reviewCollectionView.register(TicketMainPreviewCollectionViewCell.self, forCellWithReuseIdentifier: TicketMainPreviewCollectionViewCell.className)
+    }
+    
     
     func configTicketCell(data: Ticket) {
         titleLabel.text = data.title
@@ -182,5 +221,72 @@ final class TicketCollectionViewCell: UICollectionViewCell {
             $0.leading.equalTo(titleLabel)
             $0.bottom.equalToSuperview().inset(reviewStatus ? 92 : 14)
         }
+        
+        actorList = data.type3
+        reviewList = data.type6
+        actorCollectionView.reloadData()
+        reviewCollectionView.reloadData()
+    }
+}
+
+extension TicketCollectionViewCell: UICollectionViewDelegate { }
+
+extension TicketCollectionViewCell: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        switch collectionView.tag {
+        case 1:
+            return actorList.count
+        case 2:
+            return reviewList.count
+        default:
+            return 0
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        switch collectionView.tag {
+        case 1:
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: TicketMainPreviewCollectionViewCell.className,
+                for: indexPath) as? TicketMainPreviewCollectionViewCell else { return UICollectionViewCell() }
+            cell.configNameTag(data: actorList[indexPath.item])
+            return cell
+        case 2:
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: TicketMainPreviewCollectionViewCell.className,
+                for: indexPath) as? TicketMainPreviewCollectionViewCell else { return UICollectionViewCell() }
+            cell.configNameTag(data: reviewList[indexPath.item])
+            return cell
+        default:
+            return UICollectionViewCell()
+        }
+    }
+}
+
+extension TicketCollectionViewCell: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let text: String
+        let font = UIFont.fontReviewIT(.body_semibold_12)
+
+        switch collectionView.tag {
+        case 1:
+            text = actorList[indexPath.item]
+        case 2:
+            text = reviewList[indexPath.item]
+        default:
+            return .zero
+        }
+
+        // 텍스트 너비 측정
+        let textWidth = (text as NSString).size(withAttributes: [.font: font]).width
+
+        // 좌우 padding: 4 + 4 = 8
+        let cellWidth = ceil(textWidth) + 8
+        let cellHeight: CGFloat = 29
+
+        return CGSize(width: cellWidth, height: cellHeight)
     }
 }

@@ -21,7 +21,8 @@ struct Ticket: Codable {
     
     let type1: [Int]
     let type2: [Int]
-    let type3: [Int]
+    let type3: [String]
     let type4: [Int]
     let type5: [Int]
+    let type6: [String]
 }
