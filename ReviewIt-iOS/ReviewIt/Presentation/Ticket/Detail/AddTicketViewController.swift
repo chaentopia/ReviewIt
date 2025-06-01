@@ -345,7 +345,6 @@ final class AddTicketViewController: UIViewController {
     }
     
     private func setupDatePicker() {
-        let datePicker = UIDatePicker()
         datePicker.datePickerMode = .dateAndTime
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.locale = Locale(identifier: "ko-KR")
