@@ -1,5 +1,5 @@
 //
-//  MainTabbarViewController.swift
+//  MainTabBarViewController.swift
 //  ReviewIt
 //
 //  Created by 정채은 on 6/1/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainTabbarViewController: UITabBarController {
+class MainTabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
