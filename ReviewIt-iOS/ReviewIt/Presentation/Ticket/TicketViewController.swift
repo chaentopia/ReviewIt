@@ -12,7 +12,7 @@ import Then
 
 final class TicketViewController: BaseViewController {
     
-    private let titleView  = TitleView(title: StringLiterals.TicketMain.title,
+    private let titleView = TitleView(title: StringLiterals.TicketMain.title,
                                        isLeftButtonHidden: true,
                                        isRightButtonHidden: true)
     lazy var ticketCollectionView = UICollectionView(
@@ -39,9 +39,9 @@ final class TicketViewController: BaseViewController {
                               addTicketButton)
         
         titleView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            $0.centerX.height.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(48.adjustedHeight)
+            $0.width.equalToSuperview()
         }
         
         ticketCollectionView.snp.makeConstraints {
@@ -54,6 +54,10 @@ final class TicketViewController: BaseViewController {
             $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight - 18.adjustedHeight)
             $0.size.equalTo(60)
         }
+    }
+    
+    override func setNavigationBar() {
+        navigationController?.navigationBar.isHidden = true
     }
     
     override func setAddTarget() {

@@ -27,10 +27,10 @@ final class TitleView: UIView {
     
     init(title: String, isLeftButtonHidden: Bool, isRightButtonHidden: Bool) {
         super.init(frame: CGRect())
+        setUI()
         titleLabel.text = title
         leftButton.isHidden = isLeftButtonHidden
         rightButton.isHidden = isRightButtonHidden
-        setUI()
     }
 }
 
@@ -63,6 +63,7 @@ extension TitleView {
         
         self.snp.makeConstraints {
             $0.height.equalTo(48.adjustedHeight)
+            $0.width.equalTo(SizeLiterals.Screen.screenWidth)
         }
         
         titleLabel.snp.makeConstraints{
