@@ -7,23 +7,40 @@
 
 import UIKit
 
-class SplashViewController: UIViewController {
+import SnapKit
+import Then
 
+final class SplashViewController: BaseViewController {
+    
+    let logoImageView = UIImageView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        navigateToNextScreen()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func setStyle() {
+        view.backgroundColor = .mainBurgundy
+        logoImageView.image = .reviewItLogo
     }
-    */
-
+    
+    override func setLayout() {
+        self.view.addSubviews(logoImageView)
+        
+        logoImageView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+    }
+    
+    private func navigateToNextScreen() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            var nextViewController: UIViewController
+        
+            nextViewController = MainTabBarViewController()
+            
+            let navigationController = UINavigationController(rootViewController: nextViewController)
+            UIApplication.shared.windows.first?.rootViewController = navigationController
+            UIApplication.shared.windows.first?.makeKeyAndVisible()
+        }   
+    }
 }
