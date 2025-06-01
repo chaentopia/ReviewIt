@@ -7,14 +7,76 @@
 
 import UIKit
 
-class TitleView: UIView {
+import SnapKit
+import Then
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+final class TitleView: UIView {
+    
+    var titleLabel = UILabel()
+    var leftButton = UIButton()
+    var rightButton = UIButton()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUI()
     }
-    */
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    init(title: String, isLeftButtonHidden: Bool, isRightButtonHidden: Bool) {
+        super.init(frame: CGRect())
+        titleLabel.text = title
+        leftButton.isHidden = isLeftButtonHidden
+        rightButton.isHidden = isRightButtonHidden
+        setUI()
+    }
+}
 
+extension TitleView {
+    func setUI() {
+        setStyle()
+        setLayout()
+    }
+    
+    func setStyle() {
+        titleLabel.do {
+            $0.text = ""
+            $0.font = .fontReviewIT(.body_semibold_15)
+            $0.textColor = .mainBlack
+        }
+        
+        leftButton.do {
+            $0.setImage(.btnBack, for: .normal)
+        }
+        
+        rightButton.do {
+            $0.setImage(.btnEdit, for: .normal)
+        }
+    }
+    
+    func setLayout() {
+        self.addSubviews(titleLabel,
+        leftButton,
+        rightButton)
+        
+        self.snp.makeConstraints {
+            $0.height.equalTo(48.adjustedHeight)
+        }
+        
+        titleLabel.snp.makeConstraints{
+            $0.center.equalToSuperview()
+        }
+        
+        leftButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
+        }
+        
+        rightButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.centerY.equalToSuperview()
+        }
+    }
 }
