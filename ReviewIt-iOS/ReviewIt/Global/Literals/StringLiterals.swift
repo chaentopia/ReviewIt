@@ -9,8 +9,7 @@ import Foundation
 
 enum StringLiterals {
     
-    enum Ticket {
-        static let tabTitle = "티켓"
+    enum TicketMain {
         static let title = "내 티켓 모아보기"
         static let tagBefore = "리뷰 전"
         static let tagFinish = "리뷰완료"
@@ -19,12 +18,10 @@ enum StringLiterals {
     }
     
     enum Home {
-        static let tabTitle = "홈"
         static let title = "후기 구경하기"
     }
     
     enum More {
-        static let tabTitle = "더보기"
         static let title = "더보기"
         static let logout = "로그아웃"
         static let delete = "탈퇴"
