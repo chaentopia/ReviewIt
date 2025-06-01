@@ -19,8 +19,8 @@ final class AddTicketViewController: UIViewController {
     var seatNum = "1"
     
     let floorList = Array(1...5).map { "\($0)" }
-    let sectionList = ["A", "B", "C", "D", "E", "F", "G", "1", "2", "3", "4", "5", "6", "7", "8"]
-    let rowList = Array(0...8).map { "\($0)" }
+    let sectionList = ["OP", "A", "B", "C", "D", "E", "F", "G", "1", "2", "3", "4", "5", "6", "7", "8"]
+    let rowList = Array(0...50).map { "\($0)" }
     let numList = Array(1...999).map { "\($0)" }
     
     let datePicker = UIDatePicker()
@@ -314,6 +314,7 @@ final class AddTicketViewController: UIViewController {
         titleView.leftButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         laterButton.addTarget(self, action: #selector(laterButtonTapped), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        priceTextField.addTarget(self, action: #selector(priceTextFieldDidChange), for: .editingChanged)
         
         let posterTapGesture = UITapGestureRecognizer(target: self, action: #selector(setImage))
         self.posterImageView.isUserInteractionEnabled = true
@@ -333,6 +334,21 @@ final class AddTicketViewController: UIViewController {
         // 저장 로직
         let ticketTagViewController = TicketTagViewController()
         self.navigationController?.pushViewController(ticketTagViewController, animated: true)
+    }
+    
+    @objc private func priceTextFieldDidChange(_ textField: UITextField) {
+        guard let text = textField.text?.components(separatedBy: CharacterSet.decimalDigits.inverted).joined() else { return }
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.locale = Locale(identifier: "ko_KR")
+
+        if let number = Int(text) {
+            let formatted = numberFormatter.string(from: NSNumber(value: number)) ?? ""
+            textField.text = "₩\(formatted)"
+        } else {
+            textField.text = nil
+        }
     }
     
     @objc private func setImage() {
