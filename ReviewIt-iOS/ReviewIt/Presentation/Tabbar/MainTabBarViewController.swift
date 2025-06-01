@@ -14,8 +14,8 @@ final class MainTabBarViewController: UITabBarController {
     
     private var tabsList: [UIViewController] = []
     
-    let homeViewController = HomeViewController()
     let ticketViewController = TicketViewController()
+    let homeViewController = HomeViewController()
     let moreViewController = MoreViewController()
 
     override func viewDidLoad() {
@@ -48,8 +48,8 @@ final class MainTabBarViewController: UITabBarController {
     
     private func setTabs() {
         tabsList = [
-            UINavigationController(rootViewController: homeViewController),
             UINavigationController(rootViewController: ticketViewController),
+            UINavigationController(rootViewController: homeViewController),
             UINavigationController(rootViewController: moreViewController)
         ]
     }

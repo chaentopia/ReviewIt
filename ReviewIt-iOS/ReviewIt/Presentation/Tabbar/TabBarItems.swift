@@ -8,24 +8,24 @@
 import UIKit
 
 enum TabBarItems: Int, CaseIterable {
-    case home
     case ticket
+    case home
     case more
 }
 
 extension TabBarItems {
     var Icon: UIImage? {
         switch self {
-        case .home:         return UIImage(resource: .home)
         case .ticket:         return UIImage(resource: .ticket)
+        case .home:         return UIImage(resource: .home)
         case .more:      return UIImage(resource: .more)
         }
     }
     
     var selectedIcon: UIImage? {
         switch self {
-        case .home:         return UIImage(resource: .homeSelected).withRenderingMode(.alwaysOriginal)
         case .ticket:         return UIImage(resource: .ticketSelected).withRenderingMode(.alwaysOriginal)
+        case .home:         return UIImage(resource: .homeSelected).withRenderingMode(.alwaysOriginal)
         case .more:      return UIImage(resource: .moreSelected).withRenderingMode(.alwaysOriginal)
         }
     }
