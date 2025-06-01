@@ -7,6 +7,7 @@
 
 import UIKit
 
+import PhotosUI
 import SnapKit
 import Then
 
@@ -38,7 +39,9 @@ final class AddTicketViewController: BaseViewController {
     let laterButton = UIButton()
     let nextButton = UIButton()
     
+    
     override func setStyle() {
+        
         titleLabel.do {
             $0.text = StringLiterals.TicketDetail.titleLabel
             $0.font = .fontReviewIT(.title_semibold_20)
@@ -53,10 +56,12 @@ final class AddTicketViewController: BaseViewController {
             $0.setRoundBorder(borderColor: .subGray1,
                               borderWidth: 1,
                               cornerRadius: 10)
+            $0.contentMode = .scaleAspectFit
         }
         
         emptyImageView.do {
             $0.image = .empty
+            $0.isUserInteractionEnabled = false
         }
         
         dateLabel.do {
@@ -253,6 +258,10 @@ final class AddTicketViewController: BaseViewController {
         titleView.leftButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         laterButton.addTarget(self, action: #selector(laterButtonTapped), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        
+        let posterTapGesture = UITapGestureRecognizer(target: self, action: #selector(setImage))
+        self.posterImageView.isUserInteractionEnabled = true
+        self.posterImageView.addGestureRecognizer(posterTapGesture)
     }
     
     @objc private func backButtonTapped() {
@@ -268,5 +277,39 @@ final class AddTicketViewController: BaseViewController {
         // 저장 로직
         let ticketTagViewController = TicketTagViewController()
         self.navigationController?.pushViewController(ticketTagViewController, animated: true)
+    }
+    
+    @objc private func setImage() {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 1
+        configuration.filter = .any(of: [.images])
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        self.present(picker, animated: true, completion: nil)
+    }
+}
+
+extension AddTicketViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        guard let result = results.first else {
+            picker.dismiss(animated: true)
+            return
+        }
+
+        let itemProvider = result.itemProvider
+        if itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (object, error) in
+                DispatchQueue.main.async {
+                    if let image = object as? UIImage {
+                        self?.posterImageView.image = image
+                        self?.emptyImageView.isHidden = true
+                    } else {
+                        print("이미지를 불러오는 데 실패했습니다:", error?.localizedDescription ?? "Unknown error")
+                    }
+                }
+            }
+        }
+
+        picker.dismiss(animated: true)
     }
 }
