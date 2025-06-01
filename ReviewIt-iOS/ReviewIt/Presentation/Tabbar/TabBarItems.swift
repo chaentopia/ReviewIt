@@ -5,4 +5,42 @@
 //  Created by 정채은 on 6/1/25.
 //
 
-import Foundation
+import UIKit
+
+enum TabBarItems: Int, CaseIterable {
+    case home
+    case ticket
+    case more
+}
+
+extension TabBarItems {
+    var Icon: UIImage? {
+        switch self {
+        case .home:         return UIImage(resource: .home)
+        case .ticket:         return UIImage(resource: .ticket)
+        case .more:      return UIImage(resource: .more)
+        }
+    }
+    
+    var selectedIcon: UIImage? {
+        switch self {
+        case .home:         return UIImage(resource: .homeSelected).withRenderingMode(.alwaysOriginal)
+        case .ticket:         return UIImage(resource: .ticketSelected).withRenderingMode(.alwaysOriginal)
+        case .more:      return UIImage(resource: .moreSelected).withRenderingMode(.alwaysOriginal)
+        }
+    }
+}
+
+extension TabBarItems {
+    public func asTabBarItem() -> UITabBarItem {
+        let tabBarItem = UITabBarItem(
+            title: nil,
+            image: Icon,
+            selectedImage: selectedIcon
+        )
+        
+//        tabBarItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -5, right: 0)
+        
+        return tabBarItem
+    }
+}
