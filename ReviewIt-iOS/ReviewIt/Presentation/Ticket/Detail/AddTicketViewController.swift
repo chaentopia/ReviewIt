@@ -12,6 +12,8 @@ import SnapKit
 import Then
 
 final class AddTicketViewController: BaseViewController {
+    let datePicker = UIDatePicker()
+    
     let titleView = TitleView(title: StringLiterals.TicketDetail.title,
                               isLeftButtonHidden: false,
                               isRightButtonHidden: true)
@@ -21,7 +23,7 @@ final class AddTicketViewController: BaseViewController {
     let posterImageView = UIImageView()
     let emptyImageView = UIImageView()
     let titleTextField = TicketInputTextField(title: StringLiterals.TicketDetail.titlePlaceHolder)
-    let dateLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 12, left: 16, bottom: 11, right: 0))
+    let dateTextField = TicketInputTextField()
     let castTextField = TicketInputTextField(title: StringLiterals.TicketDetail.castPlaceHolder)
     let placeTextField = TicketInputTextField(title: StringLiterals.TicketDetail.placePlaceHolder)
     
@@ -39,8 +41,14 @@ final class AddTicketViewController: BaseViewController {
     let laterButton = UIButton()
     let nextButton = UIButton()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupToolBar()
+        setupDatePicker()
+    }
     
     override func setStyle() {
+        self.view.backgroundColor = .mainWhite
         
         titleLabel.do {
             $0.text = StringLiterals.TicketDetail.titleLabel
@@ -64,11 +72,9 @@ final class AddTicketViewController: BaseViewController {
             $0.isUserInteractionEnabled = false
         }
         
-        dateLabel.do {
+        dateTextField.do {
             $0.setRoundBorder(borderColor: UIColor.subGray1, borderWidth: 1, cornerRadius: 10)
             $0.textColor = .mainBlack
-            $0.font = .fontReviewIT(.body_semibold_15)
-            $0.textAlignment = .left
             $0.text = DateFormatter.ticketDisplayFormatter.string(from: Date.now)
         }
         
@@ -134,6 +140,7 @@ final class AddTicketViewController: BaseViewController {
     }
     
     override func setLayout() {
+        
         view.addSubviews(scrollView,
                          titleView,
                          bottomView)
@@ -141,7 +148,7 @@ final class AddTicketViewController: BaseViewController {
         scrollView.addSubviews(titleLabel,
                                posterImageView,
                                titleTextField,
-                               dateLabel,
+                               dateTextField,
                                castTextField,
                                placeTextField,
                                seatLabel,
@@ -212,14 +219,14 @@ final class AddTicketViewController: BaseViewController {
             $0.height.equalTo(44)
         }
         
-        dateLabel.snp.makeConstraints {
+        dateTextField.snp.makeConstraints {
             $0.top.equalTo(titleTextField.snp.bottom).offset(16)
             $0.leading.trailing.width.equalTo(titleTextField)
             $0.height.equalTo(titleTextField)
         }
         
         castTextField.snp.makeConstraints {
-            $0.top.equalTo(dateLabel.snp.bottom).offset(16)
+            $0.top.equalTo(dateTextField.snp.bottom).offset(16)
             $0.leading.trailing.width.equalTo(titleTextField)
             $0.height.equalTo(titleTextField)
         }
@@ -286,6 +293,37 @@ final class AddTicketViewController: BaseViewController {
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
         self.present(picker, animated: true, completion: nil)
+    }
+    
+    private func setupDatePicker() {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .dateAndTime
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.locale = Locale(identifier: "ko-KR")
+        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
+        dateTextField.inputView = datePicker
+    }
+
+    @objc func dateChange(_ sender: UIDatePicker) {
+        dateTextField.text = DateFormatter.ticketDisplayFormatter.string(from: sender.date)
+    }
+    
+    private func setupToolBar() {
+        
+        let toolBar = UIToolbar()
+
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonHandeler))
+
+        toolBar.items = [flexibleSpace, doneButton]
+        toolBar.sizeToFit()
+
+        dateTextField.inputAccessoryView = toolBar
+    }
+    
+    @objc func doneButtonHandeler(_ sender: UIBarButtonItem) {
+        dateTextField.text = DateFormatter.ticketDisplayFormatter.string(from: datePicker.date)
+        dateTextField.resignFirstResponder()
     }
 }
 
