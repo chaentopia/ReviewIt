@@ -16,9 +16,20 @@ final class TicketTagViewController: BaseViewController {
                               isRightButtonHidden: true)
     let titleLabel = UILabel()
     
+    lazy var reviewTagCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: reviewTagFlowLayout
+    )
+    private let reviewTagFlowLayout = UICollectionViewFlowLayout()
+    
     let bottomView = UIView()
     let laterButton = UIButton()
     let nextButton = UIButton()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setCollectionView()
+    }
     
     override func setStyle() {
         self.view.backgroundColor = .mainWhite
@@ -27,6 +38,16 @@ final class TicketTagViewController: BaseViewController {
             $0.text = StringLiterals.AddTag.titleLabel
             $0.font = .fontReviewIT(.title_semibold_20)
             $0.textColor = .mainBlack
+        }
+        
+        reviewTagCollectionView.do {
+            $0.showsHorizontalScrollIndicator = false
+            $0.showsVerticalScrollIndicator = false
+        }
+        
+        reviewTagFlowLayout.do {
+            $0.minimumLineSpacing = 20
+            $0.scrollDirection = .vertical
         }
         
         bottomView.do {
@@ -54,6 +75,7 @@ final class TicketTagViewController: BaseViewController {
     override func setLayout() {
         view.addSubviews(titleView,
                          titleLabel,
+                         reviewTagCollectionView,
                          bottomView)
         
         bottomView.addSubviews(laterButton,
@@ -68,6 +90,12 @@ final class TicketTagViewController: BaseViewController {
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(titleView.snp.bottom).offset(16)
             $0.leading.equalToSuperview().inset(24)
+        }
+        
+        reviewTagCollectionView.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
+            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.bottom.equalTo(bottomView.snp.top).offset(-21)
         }
         
         bottomView.snp.makeConstraints {
@@ -87,6 +115,13 @@ final class TicketTagViewController: BaseViewController {
             $0.bottom.equalToSuperview().inset(20)
         }
     }
+    
+    private func setCollectionView() {
+        reviewTagCollectionView.delegate = self
+        reviewTagCollectionView.dataSource = self
+        reviewTagCollectionView.register(TagGroupCollectionViewCell.self, forCellWithReuseIdentifier: TagGroupCollectionViewCell.className)
+
+    }
 
     override func setAddTarget() {
         titleView.leftButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
@@ -103,5 +138,21 @@ final class TicketTagViewController: BaseViewController {
     
     @objc private func nextButtonTapped() {
         self.navigationController?.popToRootViewController(animated: false)
+    }
+}
+
+extension TicketTagViewController: UICollectionViewDelegate { }
+
+extension TicketTagViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 6
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TagGroupCollectionViewCell.className,
+            for: indexPath) as? TagGroupCollectionViewCell else { return UICollectionViewCell() }
+        cell.configCell(data: 1)
+        return cell
     }
 }

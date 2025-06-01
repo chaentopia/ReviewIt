@@ -23,6 +23,7 @@ final class TagGroupCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
+        setCollectionView()
     }
     
     required init?(coder: NSCoder) {
@@ -63,7 +64,29 @@ final class TagGroupCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    private func setCollectionView() {
+        tagCollectionView.delegate = self
+        tagCollectionView.dataSource = self
+        tagCollectionView.register(TagCollectionViewCell.self, forCellWithReuseIdentifier: TagCollectionViewCell.className)
+    }
+    
     func configCell(data: Int) {
         // 추후 추가
+    }
+}
+
+extension TagGroupCollectionViewCell: UICollectionViewDelegate { }
+
+extension TagGroupCollectionViewCell: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TagGroupCollectionViewCell.className,
+            for: indexPath) as? TagGroupCollectionViewCell else { return UICollectionViewCell() }
+        cell.configCell(data: 1)
+        return cell
     }
 }
