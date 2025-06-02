@@ -14,8 +14,8 @@ final class TicketCollectionViewCell: UICollectionViewCell {
     /// 리뷰완료 - true, 리뷰 전 - false
     var reviewStatus = false
     
-    var actorList: [String] = []
-    var reviewList: [String] = []
+    var actorList: [Int] = []
+    var reviewList: [Int] = []
     
     let titleLabel = UILabel()
     let reviewTag = BasePaddingLabel()
@@ -222,8 +222,8 @@ final class TicketCollectionViewCell: UICollectionViewCell {
             $0.bottom.equalToSuperview().inset(reviewStatus ? 92 : 14)
         }
         
-        actorList = data.type3
-        reviewList = data.type6
+        actorList = data.typeList[2]
+        reviewList = data.typeList[5]
         actorCollectionView.reloadData()
         reviewCollectionView.reloadData()
     }
@@ -249,13 +249,13 @@ extension TicketCollectionViewCell: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: TicketMainPreviewCollectionViewCell.className,
                 for: indexPath) as? TicketMainPreviewCollectionViewCell else { return UICollectionViewCell() }
-            cell.configNameTag(data: actorList[indexPath.item])
+            cell.configNameTag(data: type3List[actorList[indexPath.item]])
             return cell
         case 2:
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: TicketMainPreviewCollectionViewCell.className,
                 for: indexPath) as? TicketMainPreviewCollectionViewCell else { return UICollectionViewCell() }
-            cell.configNameTag(data: reviewList[indexPath.item])
+            cell.configNameTag(data: type4List[reviewList[indexPath.item]])
             return cell
         default:
             return UICollectionViewCell()
@@ -273,9 +273,9 @@ extension TicketCollectionViewCell: UICollectionViewDelegateFlowLayout {
 
         switch collectionView.tag {
         case 1:
-            text = actorList[indexPath.item]
+            text = type3List[actorList[indexPath.item]]
         case 2:
-            text = reviewList[indexPath.item]
+            text = type5List[reviewList[indexPath.item]]
         default:
             return .zero
         }
