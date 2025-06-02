@@ -15,8 +15,14 @@ final class FilterBottomSheetViewController: BaseViewController {
     var num = 0
     var itemNum = 0
     var selectedTagIndices: [[Int]] = Array(repeating: [], count: 6)
+    var dismissBottomSheet: (([Int]) -> Void)? // 선택된 애들 인덱스 번호
     let tagView = TagGroupCollectionViewCell()
     let doneButton = UIButton()
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        dismissBottomSheet?(selectedTagIndices[num])
+    }
     
     override func setStyle() {
         super.setStyle()

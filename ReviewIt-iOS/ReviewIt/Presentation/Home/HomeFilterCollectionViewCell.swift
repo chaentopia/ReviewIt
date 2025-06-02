@@ -12,6 +12,7 @@ import Then
 
 final class HomeFilterCollectionViewCell: UICollectionViewCell {
     
+    var selectedTagIndex: [Int] = []
     var rowNum = 0
     var onTap: (() -> Void)?
     let tagButton = UIButton()
@@ -59,10 +60,15 @@ final class HomeFilterCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configTagCell(data: Int, isSelected: Bool) {
+    func configTagCell(data: Int, isSelected: Bool, selectedTagIndex: [Int]) {
         rowNum = data
         self.isSelected = isSelected
-        tagButton.setTitle(isSelected ? "대충 선택된 데이터" : titleList[data], for: .normal)
+        self.selectedTagIndex = selectedTagIndex
+        var tagList: [String] = []
+        selectedTagIndex.forEach {
+            tagList.append(typeList[data][$0])
+        }
+        tagButton.setTitle(isSelected ? tagList.joined(separator: ", ") : titleList[data], for: .normal)
         tagButton.setImage(isSelected ? .icDownArrowSelected : .icDownArrow, for: .normal)
         tagButton.setTitleColor(isSelected ? .mainBurgundy : .mainBlack, for: .normal)
         tagButton.setRoundBorder(borderColor: isSelected ? .mainBurgundy : .subGray1,
@@ -75,8 +81,7 @@ final class HomeFilterCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func tagButtonTapped() {
-        isSelected.toggle()
-        configTagCell(data: rowNum, isSelected: isSelected)
+        configTagCell(data: rowNum, isSelected: isSelected, selectedTagIndex: selectedTagIndex)
         onTap?()
     }
 }

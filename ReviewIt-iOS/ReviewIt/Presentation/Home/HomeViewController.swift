@@ -32,6 +32,9 @@ final class HomeViewController: BaseViewController {
                                        reviewStatus: true,
                                        typeList: [[0,1,2], [0,4,5], [1, 2], [1], [1,2], [1,2,3,4,5]])]
     
+    var selectedTagIndices: [[Int]] = Array(repeating: [], count: 6)
+
+    
     private let titleView = TitleView(title: StringLiterals.Home.title,
                                       isLeftButtonHidden: true,
                                       isRightButtonHidden: true)
@@ -155,6 +158,12 @@ final class HomeViewController: BaseViewController {
     private func showSheet(index: Int) {
         let filterBottomSheetViewController = FilterBottomSheetViewController()
         filterBottomSheetViewController.num = index
+        filterBottomSheetViewController.dismissBottomSheet = { [weak self] tagIndex in
+            self?.selectedTagIndices[index] = tagIndex
+            print(self?.selectedTagIndices)
+            self?.filterCollectionView.reloadData()
+            self?.reviewCollectionView.reloadData()
+        }
         if let sheet = filterBottomSheetViewController.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.largestUndimmedDetentIdentifier = .large
@@ -186,7 +195,9 @@ extension HomeViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: HomeFilterCollectionViewCell.className,
                 for: indexPath) as? HomeFilterCollectionViewCell else { return UICollectionViewCell() }
-            cell.configTagCell(data: indexPath.row, isSelected: false) // false 값 변경 필요
+            cell.configTagCell(data: indexPath.row,
+                               isSelected: !selectedTagIndices[indexPath.row].isEmpty,
+                               selectedTagIndex: selectedTagIndices[indexPath.row])
             cell.onTap = {
                 self.showSheet(index: indexPath.row)
             }
