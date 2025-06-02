@@ -33,7 +33,7 @@ final class HomeViewController: BaseViewController {
                                        typeList: [[0,1,2], [0,4,5], [1, 2], [1], [1,2], [1,2,3,4,5]])]
     
     var selectedTagIndices: [[Int]] = Array(repeating: [], count: 6)
-
+    
     
     private let titleView = TitleView(title: StringLiterals.Home.title,
                                       isLeftButtonHidden: true,
@@ -83,7 +83,7 @@ final class HomeViewController: BaseViewController {
         filterFlowLayout.do {
             $0.scrollDirection = .horizontal
             $0.minimumLineSpacing = 8
-            $0.sectionInset = UIEdgeInsets(top: 21, left: 16, bottom: 21, right: 16)
+            $0.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 20, right: 16)
         }
         
         reviewCollectionView.do {
@@ -200,6 +200,7 @@ extension HomeViewController: UICollectionViewDataSource {
                                selectedTagIndex: selectedTagIndices[indexPath.row])
             cell.onTap = {
                 self.showSheet(index: indexPath.row)
+                self.filterCollectionView.reloadData()
             }
             return cell
         case 1:
@@ -223,13 +224,26 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        if collectionView.tag == 0 {
-            
+        switch collectionView.tag {
+        case 0:
             let text: String
-            let font = UIFont.fontReviewIT(.body_semibold_12)
+            let font = UIFont.fontReviewIT(.body_semibold_15)
             
-            // 이거 나중에 텍스트로 바꿔야 힘
-            text = StringLiterals.Home.type1
+            if !selectedTagIndices[indexPath.row].isEmpty {
+                var tagList: [String] = []
+                selectedTagIndices[indexPath.row].forEach {
+                    tagList.append(typeList[indexPath.row][$0])
+                }
+                text = tagList.joined(separator: ", ")
+            } else {
+                let titleList = [StringLiterals.Home.type1,
+                                 StringLiterals.Home.type2,
+                                 StringLiterals.Home.type3,
+                                 StringLiterals.Home.type4,
+                                 StringLiterals.Home.type5,
+                                 StringLiterals.Home.type6]
+                text = titleList[indexPath.row]
+            }
             
             // 텍스트 너비 측정
             let textWidth = (text as NSString).size(withAttributes: [.font: font]).width
@@ -238,8 +252,10 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
             let cellHeight: CGFloat = 46
             
             return CGSize(width: cellWidth, height: cellHeight)
-        } else {
+        case 1:
             return CGSize(width: SizeLiterals.Screen.screenWidth - 48, height: 128.adjustedHeight)
+        default:
+            return .zero
         }
     }
 }
