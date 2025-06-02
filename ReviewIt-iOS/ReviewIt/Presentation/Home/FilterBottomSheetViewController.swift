@@ -13,6 +13,7 @@ import Then
 final class FilterBottomSheetViewController: BaseViewController {
     
     var num = 0
+    var itemNum = 0
     var selectedTagIndices: [[Int]] = Array(repeating: [], count: 6)
     let tagView = TagGroupCollectionViewCell()
     let doneButton = UIButton()
@@ -23,6 +24,19 @@ final class FilterBottomSheetViewController: BaseViewController {
             $0.tagCollectionView.isScrollEnabled = true
             $0.configCell(data: num, selectedIndices: selectedTagIndices[num])
             $0.tagList = typeList[num]
+            $0.filterOnTap = { [weak self] tagIndex in
+                self?.itemNum = tagIndex
+                
+                guard let self else { return }
+                var selected = self.selectedTagIndices[num]
+                if selected.contains(tagIndex) {
+                    selected.removeAll { $0 == tagIndex }
+                } else {
+                    selected.append(tagIndex)
+                }
+                self.selectedTagIndices[num] = selected
+                tagView.configCell(data: num, selectedIndices: selectedTagIndices[num])
+            }
         }
         
         doneButton.do {
@@ -53,4 +67,12 @@ final class FilterBottomSheetViewController: BaseViewController {
         }
     }
     
+    override func setAddTarget() {
+        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func doneButtonTapped() {
+        // 데이터 넘겨주기
+        self.dismiss(animated: true)
+    }
 }

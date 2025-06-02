@@ -12,6 +12,8 @@ import Then
 
 final class TagGroupCollectionViewCell: UICollectionViewCell {
     
+    var filterOnTap: ((Int) -> Void)?
+
     let titleList = ["극의 유형은?", "무대는 어땠나요?", "가장 좋았던 배우는?", "음향은 어땠나요?", "내용은 어땠나요?", "전반적으로 어땠나요?"]
     var tagList: [String] = []
 
@@ -120,6 +122,7 @@ extension TagGroupCollectionViewCell: UICollectionViewDataSource {
 
         cell.onTap = { [weak self] in
             self?.onTagSelected?(indexPath.item)
+            self?.filterOnTap?(indexPath.item)
         }
 
         return cell
