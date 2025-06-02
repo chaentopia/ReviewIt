@@ -11,6 +11,16 @@ import SnapKit
 import Then
 
 final class TicketTagViewController: BaseViewController {
+    
+    let type1List = ["힐링극", "코미디극", "피폐물", "추리극", "오열극", "생각이 많아지는 극", "로맨스극", "성장극", "실험극", "판타지극"]
+    let type2List = ["연출이 좋았음", "독특함" ,"조명이 좋았음", "무난함", "소품이 좋았음", "의상이 좋았음", "아쉬움", "화려함", "심플"]
+    let type3List = ["옥주현", "윤소호", "노윤", "윤사봉", "김주호", "그 외"]
+    let type4List = ["안정적인 라이브", "중독성 강한 넘버", "잘 안 들림", "음악 타이밍이 좋았음", "감정과 음악이 잘 어우러짐", "밸런스가 아쉬움", "라이브 아쉬움"]
+    let type5List = ["감동적이었음", "이해가 잘 됨", "공감됨", "기대 이상", "기대 이하", "뻔함", "어려웠음", "지루했음", "웃겼음"]
+    let type6List = ["인생 공연", "재관람 의향 있음", "눈물을 흘렸음", "한 번만 보기 좋음", "다른 캐스팅이 궁금", "무난함", "힐링되었음", "여운이 남음", "아쉬웠음"]
+    
+    var selectedTagIndices: [[Int]] = Array(repeating: [], count: 6)
+    
     let titleView = TitleView(title: StringLiterals.AddTicket.title,
                               isLeftButtonHidden: false,
                               isRightButtonHidden: true)
@@ -43,11 +53,15 @@ final class TicketTagViewController: BaseViewController {
         reviewTagCollectionView.do {
             $0.showsHorizontalScrollIndicator = false
             $0.showsVerticalScrollIndicator = false
+            $0.backgroundColor = .mainWhite
+            $0.isUserInteractionEnabled = true
         }
         
         reviewTagFlowLayout.do {
             $0.minimumLineSpacing = 20
             $0.scrollDirection = .vertical
+            $0.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+            $0.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         }
         
         bottomView.do {
@@ -96,6 +110,7 @@ final class TicketTagViewController: BaseViewController {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.bottom.equalTo(bottomView.snp.top).offset(-21)
+            $0.width.equalTo(SizeLiterals.Screen.screenWidth - 48)
         }
         
         bottomView.snp.makeConstraints {
@@ -152,7 +167,37 @@ extension TicketTagViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TagGroupCollectionViewCell.className,
             for: indexPath) as? TagGroupCollectionViewCell else { return UICollectionViewCell() }
-        cell.configCell(data: 1)
+        cell.configCell(data: indexPath.item,
+                        selectedIndices: selectedTagIndices[indexPath.item])
+
+        cell.onTagSelected = { [weak self] tagIndex in
+            guard let self else { return }
+            var selected = self.selectedTagIndices[indexPath.item]
+            if selected.contains(tagIndex) {
+                selected.removeAll { $0 == tagIndex }
+            } else {
+                selected.append(tagIndex)
+            }
+            self.selectedTagIndices[indexPath.item] = selected
+            self.reviewTagCollectionView.reloadItems(at: [indexPath]) // 외부 셀 하나만 reload
+        }
+
+        switch indexPath.row {
+        case 0:
+            cell.tagList = type1List
+        case 1:
+            cell.tagList = type2List
+        case 2:
+            cell.tagList = type3List
+        case 3:
+            cell.tagList = type4List
+        case 4:
+            cell.tagList = type5List
+        case 5:
+            cell.tagList = type6List
+        default:
+            break
+        }
         return cell
     }
 }

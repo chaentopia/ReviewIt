@@ -12,11 +12,13 @@ import Then
 
 final class TagCollectionViewCell: UICollectionViewCell {
     
+    var onTap: (() -> Void)?
     let tagButton = UIButton()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
+        setAddTarget()
     }
     
     required init?(coder: NSCoder) {
@@ -32,8 +34,7 @@ final class TagCollectionViewCell: UICollectionViewCell {
         tagButton.do {
             $0.setTitle("", for: .normal)
             $0.setTitleColor(.mainBlack, for: .normal)
-            $0.setTitleColor(.mainBurgundy, for: .selected)
-            $0.setRoundBorder(borderColor: isSelected ? .mainBurgundy : .subGray1,
+            $0.setRoundBorder(borderColor: .subGray1,
                               borderWidth: 1,
                               cornerRadius: 10)
             $0.titleLabel?.font = .fontReviewIT(.body_semibold_15)
@@ -49,7 +50,25 @@ final class TagCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configCell(data: String) {
+    func configTagCell(data: String, isSelected: Bool) {
         tagButton.setTitle(data, for: .normal)
+        updateStyle(isSelected: isSelected)
+    }
+
+    
+    private func setAddTarget() {
+        tagButton.addTarget(self, action: #selector(tagButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func tagButtonTapped() {
+        isSelected.toggle()
+        onTap?()
+    }
+    
+    func updateStyle(isSelected: Bool) {
+        tagButton.setTitleColor(isSelected ? .mainBurgundy : .mainBlack, for: .normal)
+        tagButton.setRoundBorder(borderColor: isSelected ? .mainBurgundy : .subGray1,
+                                 borderWidth: 1,
+                                 cornerRadius: 10)
     }
 }
