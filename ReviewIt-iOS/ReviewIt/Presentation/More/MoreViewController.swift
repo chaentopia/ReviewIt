@@ -8,6 +8,7 @@
 import UIKit
 
 import KakaoSDKAuth
+import KakaoSDKUser
 import SnapKit
 import Then
 
@@ -38,8 +39,8 @@ final class MoreViewController: BaseViewController {
             $0.setRoundBorder(borderColor: .subGray1, borderWidth: 1, cornerRadius: 10)
             $0.setTitleColor(.mainBlack, for: .normal)
             $0.titleLabel?.font = .fontReviewIT(.body_semibold_15)
-            $0.titleLabel?.textAlignment = .left
             $0.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 11, right: 0)
+            $0.contentHorizontalAlignment = .left
         }
         
         deleteButton.do {
@@ -47,8 +48,9 @@ final class MoreViewController: BaseViewController {
             $0.setRoundBorder(borderColor: .subGray1, borderWidth: 1, cornerRadius: 10)
             $0.setTitleColor(.mainBlack, for: .normal)
             $0.titleLabel?.font = .fontReviewIT(.body_semibold_15)
-            $0.titleLabel?.textAlignment = .left
             $0.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 11, right: 0)
+            $0.contentHorizontalAlignment = .left
+
         }
     }
     
@@ -90,14 +92,40 @@ final class MoreViewController: BaseViewController {
     }
     
     @objc private func logoutButtonTapped() {
-        print("로그아웃")
-        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-        sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: SplashViewController())
+        
+        UserApi.shared.logout {(error) in
+            if let error = error {
+                print(error)
+            }
+            else {
+                print("logout() success.")
+                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: SplashViewController())
+            }
+        }
     }
     
     @objc private func deleteButtonTapped() {
-        print("탈퇴")
-        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-        sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: SplashViewController())
+        let title = StringLiterals.More.deleteTitle
+        let description = StringLiterals.More.deleteDescription
+        
+        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
+        let notYet = UIAlertAction(title: StringLiterals.More.no, style: .default)
+        let yes = UIAlertAction(title: StringLiterals.More.yes, style: .destructive) { _ in
+            UserApi.shared.unlink {(error) in
+                if let error = error {
+                    print(error)
+                }
+                else {
+                    print("unlink() success.")
+                    guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                    sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: SplashViewController())
+                }
+            }
+        }
+        
+        alert.addAction(notYet)
+        alert.addAction(yes)
+        present(alert, animated: true)
     }
 }
