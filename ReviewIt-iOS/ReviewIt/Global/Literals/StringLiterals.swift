@@ -17,7 +17,7 @@ enum StringLiterals {
         static let summary = "한 줄 요약"
     }
     
-    enum TicketDetail {
+    enum AddTicket {
         static let title = "후기 작성하기"
         static let titleLabel = "REVIEW it!"
         static let titlePlaceHolder = "제목을 입력하세요"
@@ -28,7 +28,13 @@ enum StringLiterals {
         static let pricePlaceHolder = "금액을 입력하세요"
         static let laterButton = "저장하고 후기는 나중에"
         static let reviewButton = "후기 쓰러 가기"
-        static let doneButton = "완료"
+    }
+    
+    enum AddTag {
+        static let titleLabel = "REVIEW it!"
+
+        static let laterButton = "후기는 나중에"
+        static let reviewButton = "작성 완료"
     }
     
     enum Home {

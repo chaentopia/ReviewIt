@@ -26,7 +26,7 @@ final class AddTicketViewController: UIViewController {
     let datePicker = UIDatePicker()
     let seatPickerView = UIPickerView()
     
-    let titleView = TitleView(title: StringLiterals.TicketDetail.title,
+    let titleView = TitleView(title: StringLiterals.AddTicket.title,
                               isLeftButtonHidden: false,
                               isRightButtonHidden: true)
     
@@ -34,10 +34,10 @@ final class AddTicketViewController: UIViewController {
     let titleLabel = UILabel()
     let posterImageView = UIImageView()
     let emptyImageView = UIImageView()
-    let titleTextField = TicketInputTextField(title: StringLiterals.TicketDetail.titlePlaceHolder)
+    let titleTextField = TicketInputTextField(title: StringLiterals.AddTicket.titlePlaceHolder)
     let dateTextField = TicketInputTextField()
-    let castTextField = TicketInputTextField(title: StringLiterals.TicketDetail.castPlaceHolder)
-    let placeTextField = TicketInputTextField(title: StringLiterals.TicketDetail.placePlaceHolder)
+    let castTextField = TicketInputTextField(title: StringLiterals.AddTicket.castPlaceHolder)
+    let placeTextField = TicketInputTextField(title: StringLiterals.AddTicket.placePlaceHolder)
     
     let seatLabel = UILabel()
     let seatStackView = UIStackView()
@@ -46,8 +46,8 @@ final class AddTicketViewController: UIViewController {
     let seatRowTextField = TicketInputTextField()
     let seatNumTextField = TicketInputTextField()
     
-    let platformTextField = TicketInputTextField(title: StringLiterals.TicketDetail.platformPlaceHolder)
-    let priceTextField = TicketInputTextField(title: StringLiterals.TicketDetail.pricePlaceHolder)
+    let platformTextField = TicketInputTextField(title: StringLiterals.AddTicket.platformPlaceHolder)
+    let priceTextField = TicketInputTextField(title: StringLiterals.AddTicket.pricePlaceHolder)
     
     let bottomView = UIView()
     let laterButton = UIButton()
@@ -73,7 +73,7 @@ final class AddTicketViewController: UIViewController {
         self.view.backgroundColor = .mainWhite
         
         titleLabel.do {
-            $0.text = StringLiterals.TicketDetail.titleLabel
+            $0.text = StringLiterals.AddTicket.titleLabel
             $0.font = .fontReviewIT(.title_semibold_20)
             $0.textColor = .mainBlack
         }
@@ -101,7 +101,7 @@ final class AddTicketViewController: UIViewController {
         }
         
         seatLabel.do {
-            $0.text = StringLiterals.TicketDetail.seatLabel
+            $0.text = StringLiterals.AddTicket.seatLabel
             $0.font = .fontReviewIT(.body_semibold_15)
             $0.textColor = .mainBlack
         }
@@ -149,17 +149,17 @@ final class AddTicketViewController: UIViewController {
         }
         
         laterButton.do {
-            $0.setTitle(StringLiterals.TicketDetail.laterButton, for: .normal)
+            $0.setTitle(StringLiterals.AddTicket.laterButton, for: .normal)
             $0.setTitleColor(.mainBlack, for: .normal)
             $0.titleLabel?.font = .fontReviewIT(.body_semibold_12)
-            $0.setUnderline(forText: StringLiterals.TicketDetail.laterButton)
+            $0.setUnderline(forText: StringLiterals.AddTicket.laterButton)
         }
         
         nextButton.do {
             $0.setRoundBorder(borderColor: UIColor.mainBlack,
                               borderWidth: 1,
                               cornerRadius: 10)
-            $0.setTitle(StringLiterals.TicketDetail.reviewButton, for: .normal)
+            $0.setTitle(StringLiterals.AddTicket.reviewButton, for: .normal)
             $0.setTitleColor(.mainBlack, for: .normal)
             $0.titleLabel?.font = .fontReviewIT(.body_semibold_15)
             $0.setBackgroundColor(.subGray2, for: .normal)
@@ -326,12 +326,12 @@ final class AddTicketViewController: UIViewController {
     }
     
     @objc private func laterButtonTapped() {
-        // 다 작성되었는지 확인하는 로직 + 저장 로직
+        // 다 작성되었는지 확인하는 로직 + 저장 로직 추가
         self.navigationController?.popViewController(animated: false)
     }
     
     @objc private func nextButtonTapped() {
-        // 저장 로직
+        // 저장 로직 추가
         let ticketTagViewController = TicketTagViewController()
         self.navigationController?.pushViewController(ticketTagViewController, animated: true)
     }
