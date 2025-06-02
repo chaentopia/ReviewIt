@@ -11,7 +11,8 @@ import SnapKit
 import Then
 
 final class TicketDetailViewController: BaseViewController {
-    
+
+    var isMyReview = true
     var ticketData: Ticket = Ticket(id: 0,
                                     title: "마타하리",
                                     date: Date.now,
@@ -23,9 +24,9 @@ final class TicketDetailViewController: BaseViewController {
                                     reviewStatus: true,
                                     typeList: [[0,1,2], [0,4,5], [1, 2], [1], [1,2],[2,3,4,5]])
     
-    private let titleView = TitleView(title: StringLiterals.TicketDetail.title,
+    private lazy var titleView = TitleView(title: StringLiterals.TicketDetail.title,
                                        isLeftButtonHidden: false,
-                                       isRightButtonHidden: false)
+                                       isRightButtonHidden: !isMyReview)
     
     let scrollView = UIScrollView()
     let titleLabel = UILabel()

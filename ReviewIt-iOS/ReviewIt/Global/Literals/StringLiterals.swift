@@ -51,6 +51,14 @@ enum StringLiterals {
     
     enum Home {
         static let title = "후기 구경하기"
+        static let type1 = "극 유형"
+        static let type2 = "무대"
+        static let type3 = "배우"
+        static let type4 = "음향"
+        static let type5 = "내용"
+        static let type6 = "전반적"
+        static let done = "선택 완료"
+        static let empty = "아직 후기가 없어요!\n내가 먼저 작성해 볼까요?"
     }
     
     enum More {

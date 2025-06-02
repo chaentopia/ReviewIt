@@ -17,7 +17,7 @@ final class SplashViewController: BaseViewController {
     let logoImageView = UIImageView()
     let kakaoLoginButton = UIButton()
     
-    var isLogin = false
+    var isLogin = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,7 +98,7 @@ final class SplashViewController: BaseViewController {
                             if let kakaoUser = user.kakaoAccount?.profile {
                                 if let name = kakaoUser.nickname {
                                     UserInfo.shared.name = name
-                                    print("이름은\(name)")
+                                    print("이름: \(name)")
                                 }
                             }
                         }
@@ -130,7 +130,7 @@ final class SplashViewController: BaseViewController {
                             if let kakaoUser = user.kakaoAccount?.profile {
                                 if let name = kakaoUser.nickname {
                                     UserInfo.shared.name = name
-                                    print("이름은\(name)")
+                                    print("이름: \(name)")
                                 }
                             }
                         }
