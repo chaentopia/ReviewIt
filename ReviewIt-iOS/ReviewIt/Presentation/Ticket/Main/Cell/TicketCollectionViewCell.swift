@@ -112,6 +112,7 @@ final class TicketCollectionViewCell: UICollectionViewCell {
         reviewCollectionView.do {
             $0.tag = 2
             $0.showsHorizontalScrollIndicator = false
+            $0.isScrollEnabled = true
         }
         
         reviewFlowLayout.do {
@@ -255,7 +256,7 @@ extension TicketCollectionViewCell: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: TicketMainPreviewCollectionViewCell.className,
                 for: indexPath) as? TicketMainPreviewCollectionViewCell else { return UICollectionViewCell() }
-            cell.configNameTag(data: type4List[reviewList[indexPath.item]])
+            cell.configNameTag(data: type6List[reviewList[indexPath.item]])
             return cell
         default:
             return UICollectionViewCell()
@@ -274,8 +275,10 @@ extension TicketCollectionViewCell: UICollectionViewDelegateFlowLayout {
         switch collectionView.tag {
         case 1:
             text = type3List[actorList[indexPath.item]]
+            print(text)
         case 2:
-            text = type5List[reviewList[indexPath.item]]
+            text = type6List[reviewList[indexPath.item]]
+            print(text)
         default:
             return .zero
         }

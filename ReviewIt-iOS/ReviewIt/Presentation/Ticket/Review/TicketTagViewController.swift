@@ -175,22 +175,7 @@ extension TicketTagViewController: UICollectionViewDataSource {
             self.reviewTagCollectionView.reloadItems(at: [indexPath]) // 외부 셀 하나만 reload
         }
 
-        switch indexPath.row {
-        case 0:
-            cell.tagList = type1List
-        case 1:
-            cell.tagList = type2List
-        case 2:
-            cell.tagList = type3List
-        case 3:
-            cell.tagList = type4List
-        case 4:
-            cell.tagList = type5List
-        case 5:
-            cell.tagList = type6List
-        default:
-            break
-        }
+        cell.tagList = typeList[indexPath.row]
         return cell
     }
 }
