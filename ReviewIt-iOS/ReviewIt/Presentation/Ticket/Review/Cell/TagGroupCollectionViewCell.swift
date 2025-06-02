@@ -14,7 +14,13 @@ final class TagGroupCollectionViewCell: UICollectionViewCell {
     
     var filterOnTap: ((Int) -> Void)?
 
-    let titleList = ["극의 유형은?", "무대는 어땠나요?", "가장 좋았던 배우는?", "음향은 어땠나요?", "내용은 어땠나요?", "전반적으로 어땠나요?"]
+    let titleList = [StringLiterals.TicketDetail.type1,
+                     StringLiterals.TicketDetail.type2,
+                     StringLiterals.TicketDetail.type3,
+                     StringLiterals.TicketDetail.type4,
+                     StringLiterals.TicketDetail.type5,
+                     StringLiterals.TicketDetail.type6]
+    
     var tagList: [String] = []
 
     var selectedIndices: [Int] = []

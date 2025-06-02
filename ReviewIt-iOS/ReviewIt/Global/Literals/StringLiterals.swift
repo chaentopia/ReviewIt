@@ -44,7 +44,7 @@ enum StringLiterals {
         static let type1 = "극의 유형은?"
         static let type2 = "무대는 어땠나요?"
         static let type3 = "가장 좋았던 배우는?"
-        static let type4 = "음향은 어땠나요?"
+        static let type4 = "음악은 어땠나요?"
         static let type5 = "내용은 어땠나요?"
         static let type6 = "전반적으로 어땠나요?"
     }
@@ -54,7 +54,7 @@ enum StringLiterals {
         static let type1 = "극 유형"
         static let type2 = "무대"
         static let type3 = "배우"
-        static let type4 = "음향"
+        static let type4 = "음악"
         static let type5 = "내용"
         static let type6 = "전반적"
         static let done = "선택 완료"
