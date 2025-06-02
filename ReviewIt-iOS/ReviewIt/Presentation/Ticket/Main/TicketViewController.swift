@@ -22,7 +22,7 @@ final class TicketViewController: BaseViewController {
             platform: "멜론티켓",
             price: 1300000,
             reviewStatus: true,
-            typeList: [[0,1,2], [0,4,5], [1, 2], [1], [1,2],[2,3,4,5]]),
+            typeList: [[0,1,2], [0,4,5], [1, 2], [1], [1,2], [1,2,3,4,5]]),
      Ticket(id: 0,
             title: "리지",
             date: Date.now,
@@ -32,7 +32,7 @@ final class TicketViewController: BaseViewController {
             platform: "인터파크티켓",
             price: 50000,
             reviewStatus: false,
-            typeList: [[0,1,2], [0,4,5], [1, 2], [1], [1,2],[2,3,4,5]])]
+            typeList: [[],[],[],[],[],[]])]
     
     private let titleView = TitleView(title: StringLiterals.TicketMain.title,
                                        isLeftButtonHidden: true,
@@ -112,10 +112,12 @@ final class TicketViewController: BaseViewController {
     }
 
     @objc private func pushToDetail(_ sender: UITapGestureRecognizer) {
-//        guard let cell = sender.view as? TicketCollectionViewCell
-//        let indexPath = ticketCollectionView.indexPath(for: cell) else { return }
-//        let id = chatRoomListData[indexPath.row].id
         let ticketDetailViewController = TicketDetailViewController()
+        
+        guard let cell = sender.view as? TicketCollectionViewCell else { return }
+        guard let indexPath = ticketCollectionView.indexPath(for: cell) else { return }
+        ticketDetailViewController.ticketData = ticketList[indexPath.row]
+        
         ticketDetailViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(ticketDetailViewController, animated: true)
     }
