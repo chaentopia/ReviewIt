@@ -275,10 +275,8 @@ extension TicketCollectionViewCell: UICollectionViewDelegateFlowLayout {
         switch collectionView.tag {
         case 1:
             text = type3List[actorList[indexPath.item]]
-            print(text)
         case 2:
             text = type6List[reviewList[indexPath.item]]
-            print(text)
         default:
             return .zero
         }

@@ -11,7 +11,26 @@ import SnapKit
 import Then
 
 final class HomeViewController: BaseViewController {
-    var ticketList: [Ticket] = []
+    var ticketList: [Ticket] = [Ticket(id: 0,
+                                       title: "마타하리",
+                                       date: Date.now,
+                                       cast: ["노윤", "옥주현"],
+                                       place: "LG이트센터서울 LG SIGNATURE홀",
+                                       seat: ["1", "A", "3", "20"],
+                                       platform: "멜론티켓",
+                                       price: 1300000,
+                                       reviewStatus: true,
+                                       typeList: [[0,1,2], [0,4,5], [1, 2], [1], [1,2], [1,2,3,4,5]]),
+                                Ticket(id: 0,
+                                       title: "리지",
+                                       date: Date.now,
+                                       cast: ["이아름솔", "김소향"],
+                                       place: "두산아트센터 연강홀",
+                                       seat: ["1", "-", "1", "349"],
+                                       platform: "인터파크티켓",
+                                       price: 50000,
+                                       reviewStatus: true,
+                                       typeList: [[0,1,2], [0,4,5], [1, 2], [1], [1,2], [1,2,3,4,5]])]
     
     private let titleView = TitleView(title: StringLiterals.Home.title,
                                       isLeftButtonHidden: true,
@@ -55,12 +74,13 @@ final class HomeViewController: BaseViewController {
         filterCollectionView.do {
             $0.backgroundColor = .mainWhite
             $0.tag = 0
+            $0.showsHorizontalScrollIndicator = false
         }
         
         filterFlowLayout.do {
             $0.scrollDirection = .horizontal
             $0.minimumLineSpacing = 8
-            $0.sectionInset = UIEdgeInsets(top: 7, left: 0, bottom: 21, right: 0)
+            $0.sectionInset = UIEdgeInsets(top: 21, left: 16, bottom: 21, right: 16)
         }
         
         reviewCollectionView.do {
@@ -91,13 +111,14 @@ final class HomeViewController: BaseViewController {
         }
         
         filterCollectionView.snp.makeConstraints {
-            $0.width.equalToSuperview()
-            $0.top.equalTo(titleView.snp.bottom)
-            $0.height.equalTo(46)
+            $0.width.equalTo(SizeLiterals.Screen.screenWidth)
+            $0.top.equalTo(titleView.snp.bottom).offset(7)
+            $0.height.equalTo(50)
         }
         
         reviewCollectionView.snp.makeConstraints {
             $0.width.equalTo(SizeLiterals.Screen.screenWidth - 48)
+            $0.top.equalTo(filterCollectionView.snp.bottom).offset(11)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
         }
@@ -111,11 +132,23 @@ final class HomeViewController: BaseViewController {
     private func setCollectionView() {
         filterCollectionView.delegate = self
         filterCollectionView.dataSource = self
-        filterCollectionView.register(TicketCollectionViewCell.self, forCellWithReuseIdentifier: TicketCollectionViewCell.className)
+        filterCollectionView.register(HomeFilterCollectionViewCell.self, forCellWithReuseIdentifier: HomeFilterCollectionViewCell.className)
         
         reviewCollectionView.delegate = self
         reviewCollectionView.dataSource = self
-        reviewCollectionView.register(TicketCollectionViewCell.self, forCellWithReuseIdentifier: TicketCollectionViewCell.className)
+        reviewCollectionView.register(HomeReviewCollectionViewCell.self, forCellWithReuseIdentifier: HomeReviewCollectionViewCell.className)
+    }
+    
+    @objc private func pushToDetail(_ sender: UITapGestureRecognizer) {
+        let ticketDetailViewController = TicketDetailViewController()
+        ticketDetailViewController.isMyReview = false
+        
+        guard let cell = sender.view as? HomeReviewCollectionViewCell else { return }
+        guard let indexPath = reviewCollectionView.indexPath(for: cell) else { return }
+        ticketDetailViewController.ticketData = ticketList[indexPath.row]
+        
+        ticketDetailViewController.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(ticketDetailViewController, animated: true)
     }
 }
 
@@ -138,17 +171,51 @@ extension HomeViewController: UICollectionViewDataSource {
         switch collectionView.tag {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: TicketCollectionViewCell.className,
-                for: indexPath) as? TicketCollectionViewCell else { return UICollectionViewCell() }
+                withReuseIdentifier: HomeFilterCollectionViewCell.className,
+                for: indexPath) as? HomeFilterCollectionViewCell else { return UICollectionViewCell() }
+            cell.configTagCell(data: indexPath.row, isSelected: false) // false 값 변경 필요
+            cell.onTap = {
+                print("여기서 바텀시트 띄울 거예요")
+            }
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: TicketCollectionViewCell.className,
-                for: indexPath) as? TicketCollectionViewCell else { return UICollectionViewCell() }
+                withReuseIdentifier: HomeReviewCollectionViewCell.className,
+                for: indexPath) as? HomeReviewCollectionViewCell else { return UICollectionViewCell() }
+            cell.configTicketCell(data: ticketList[indexPath.item])
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushToDetail(_:)))
+            cell.addGestureRecognizer(tapGesture)
             return cell
             
         default:
             return UICollectionViewCell()
+        }
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        if collectionView.tag == 0 {
+            
+            let text: String
+            let font = UIFont.fontReviewIT(.body_semibold_12)
+            
+            // 이거 나중에 텍스트로 바꿔야 힘
+            text = StringLiterals.Home.type1
+            
+            // 텍스트 너비 측정
+            let textWidth = (text as NSString).size(withAttributes: [.font: font]).width
+            
+            let cellWidth = ceil(textWidth) + 10 + 24 + 18
+            let cellHeight: CGFloat = 46
+            
+            return CGSize(width: cellWidth, height: cellHeight)
+        } else {
+            return CGSize(width: SizeLiterals.Screen.screenWidth - 48, height: 128.adjustedHeight)
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  TagCollectionViewCell.swift
+//  HomeFilterCollectionViewCell.swift
 //  ReviewIt
 //
 //  Created by 정채은 on 6/2/25.
@@ -10,10 +10,17 @@ import UIKit
 import SnapKit
 import Then
 
-final class TagCollectionViewCell: UICollectionViewCell {
+final class HomeFilterCollectionViewCell: UICollectionViewCell {
     
+    var rowNum = 0
     var onTap: (() -> Void)?
     let tagButton = UIButton()
+    let titleList = [StringLiterals.Home.type1,
+                     StringLiterals.Home.type2,
+                     StringLiterals.Home.type3,
+                     StringLiterals.Home.type4,
+                     StringLiterals.Home.type5,
+                     StringLiterals.Home.type6]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,13 +39,15 @@ final class TagCollectionViewCell: UICollectionViewCell {
     
     private func setStyle() {
         tagButton.do {
-            $0.setTitle("", for: .normal)
+            $0.setTitle(StringLiterals.Home.type1, for: .normal)
             $0.setTitleColor(.mainBlack, for: .normal)
             $0.setRoundBorder(borderColor: .subGray1,
                               borderWidth: 1,
                               cornerRadius: 10)
             $0.titleLabel?.font = .fontReviewIT(.body_semibold_15)
+            $0.setImage(.icDownArrow, for: .normal)
             $0.contentEdgeInsets = UIEdgeInsets(top: 11, left: 9, bottom: 11, right: 9)
+            $0.semanticContentAttribute = .forceRightToLeft
         }
     }
     
@@ -50,11 +59,16 @@ final class TagCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configTagCell(data: String, isSelected: Bool) {
-        tagButton.setTitle(data, for: .normal)
-        updateStyle(isSelected: isSelected)
+    func configTagCell(data: Int, isSelected: Bool) {
+        rowNum = data
+        self.isSelected = isSelected
+        tagButton.setTitle(isSelected ? "대충 선택된 데이터" : titleList[data], for: .normal)
+        tagButton.setImage(isSelected ? .icDownArrowSelected : .icDownArrow, for: .normal)
+        tagButton.setTitleColor(isSelected ? .mainBurgundy : .mainBlack, for: .normal)
+        tagButton.setRoundBorder(borderColor: isSelected ? .mainBurgundy : .subGray1,
+                                 borderWidth: 1,
+                                 cornerRadius: 10)
     }
-
     
     private func setAddTarget() {
         tagButton.addTarget(self, action: #selector(tagButtonTapped), for: .touchUpInside)
@@ -62,13 +76,7 @@ final class TagCollectionViewCell: UICollectionViewCell {
     
     @objc private func tagButtonTapped() {
         isSelected.toggle()
+        configTagCell(data: rowNum, isSelected: isSelected)
         onTap?()
-    }
-    
-    func updateStyle(isSelected: Bool) {
-        tagButton.setTitleColor(isSelected ? .mainBurgundy : .mainBlack, for: .normal)
-        tagButton.setRoundBorder(borderColor: isSelected ? .mainBurgundy : .subGray1,
-                                 borderWidth: 1,
-                                 cornerRadius: 10)
     }
 }
