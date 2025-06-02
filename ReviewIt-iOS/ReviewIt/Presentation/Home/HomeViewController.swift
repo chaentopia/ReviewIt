@@ -151,6 +151,17 @@ final class HomeViewController: BaseViewController {
         ticketDetailViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(ticketDetailViewController, animated: true)
     }
+    
+    private func showSheet() {
+        let filterBottomSheetViewController = FilterBottomSheetViewController()
+        if let sheet = filterBottomSheetViewController.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.largestUndimmedDetentIdentifier = .large
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.prefersGrabberVisible = true
+        }
+        present(filterBottomSheetViewController, animated: true, completion: nil)
+    }
 }
 
 extension HomeViewController: UICollectionViewDelegate { }
@@ -176,7 +187,7 @@ extension HomeViewController: UICollectionViewDataSource {
                 for: indexPath) as? HomeFilterCollectionViewCell else { return UICollectionViewCell() }
             cell.configTagCell(data: indexPath.row, isSelected: false) // false 값 변경 필요
             cell.onTap = {
-                print("여기서 바텀시트 띄울 거예요")
+                self.showSheet()
             }
             return cell
         case 1:
