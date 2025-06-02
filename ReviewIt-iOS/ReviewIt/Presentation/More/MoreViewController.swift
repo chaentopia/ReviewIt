@@ -92,17 +92,26 @@ final class MoreViewController: BaseViewController {
     }
     
     @objc private func logoutButtonTapped() {
+        let title = StringLiterals.More.logoutTitle
+        let description = ""
         
-        UserApi.shared.logout {(error) in
-            if let error = error {
-                print(error)
-            }
-            else {
-                print("logout() success.")
-                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-                sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: SplashViewController())
+        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
+        let notYet = UIAlertAction(title: StringLiterals.More.no, style: .default)
+        let yes = UIAlertAction(title: StringLiterals.More.logoutYes, style: .destructive) { _ in
+            UserApi.shared.logout {(error) in
+                if let error = error {
+                    print(error)
+                }
+                else {
+                    print("logout() success.")
+                    guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                    sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: SplashViewController())
+                }
             }
         }
+        alert.addAction(notYet)
+        alert.addAction(yes)
+        present(alert, animated: true)
     }
     
     @objc private func deleteButtonTapped() {
@@ -111,7 +120,7 @@ final class MoreViewController: BaseViewController {
         
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         let notYet = UIAlertAction(title: StringLiterals.More.no, style: .default)
-        let yes = UIAlertAction(title: StringLiterals.More.yes, style: .destructive) { _ in
+        let yes = UIAlertAction(title: StringLiterals.More.deleteYes, style: .destructive) { _ in
             UserApi.shared.unlink {(error) in
                 if let error = error {
                     print(error)

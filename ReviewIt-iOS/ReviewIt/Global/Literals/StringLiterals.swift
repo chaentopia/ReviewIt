@@ -57,9 +57,11 @@ enum StringLiterals {
         static let title = "더보기"
         static let logout = "로그아웃"
         static let delete = "탈퇴"
+        static let logoutTitle = "로그아웃 하시겠습니까?"
         static let deleteTitle = "탈퇴하시겠습니까?"
         static let deleteDescription = "탈퇴하시면 작성된 티켓은 모두 삭제됩니다."
         static let no = "아니요"
-        static let yes = "탈퇴"
+        static let deleteYes = "탈퇴"
+        static let logoutYes = "로그아웃"
     }
 }
