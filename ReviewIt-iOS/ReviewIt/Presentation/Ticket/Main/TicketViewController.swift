@@ -112,10 +112,12 @@ final class TicketViewController: BaseViewController {
     }
 
     @objc private func pushToDetail(_ sender: UITapGestureRecognizer) {
-//        guard let cell = sender.view as? TicketCollectionViewCell
-//        let indexPath = ticketCollectionView.indexPath(for: cell) else { return }
-//        let id = chatRoomListData[indexPath.row].id
         let ticketDetailViewController = TicketDetailViewController()
+        
+        guard let cell = sender.view as? TicketCollectionViewCell else { return }
+        guard let indexPath = ticketCollectionView.indexPath(for: cell) else { return }
+        ticketDetailViewController.ticketData = ticketList[indexPath.row]
+        
         ticketDetailViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(ticketDetailViewController, animated: true)
     }
