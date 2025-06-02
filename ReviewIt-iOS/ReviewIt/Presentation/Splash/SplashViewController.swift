@@ -88,7 +88,23 @@ final class SplashViewController: BaseViewController {
                 let navigationController = UINavigationController(rootViewController: nextViewController)
                 UIApplication.shared.windows.first?.rootViewController = navigationController
                 UIApplication.shared.windows.first?.makeKeyAndVisible()
-                _ = oauthToken
+                self.isLogin = true
+                UserApi.shared.me() {(user, error) in
+                    if let error = error {
+                        print(error)
+                    } else {
+                        print("me() success.")
+                        if let user = user {
+                            if let kakaoUser = user.kakaoAccount?.profile {
+                                if let name = kakaoUser.nickname {
+                                    UserInfo.shared.name = name
+                                    print("이름은\(name)")
+                                }
+                            }
+                        }
+                    }
+                    _ = oauthToken
+                }
             }
         }
     }
@@ -104,7 +120,22 @@ final class SplashViewController: BaseViewController {
                 let navigationController = UINavigationController(rootViewController: nextViewController)
                 UIApplication.shared.windows.first?.rootViewController = navigationController
                 UIApplication.shared.windows.first?.makeKeyAndVisible()
-                
+                self.isLogin = true
+                UserApi.shared.me() {(user, error) in
+                    if let error = error {
+                        print(error)
+                    } else {
+                        print("me() success.")
+                        if let user = user {
+                            if let kakaoUser = user.kakaoAccount?.profile {
+                                if let name = kakaoUser.nickname {
+                                    UserInfo.shared.name = name
+                                    print("이름은\(name)")
+                                }
+                            }
+                        }
+                    }
+                }
                 _ = oauthToken
             }
         }
