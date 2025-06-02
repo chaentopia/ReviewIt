@@ -86,6 +86,7 @@ final class HomeViewController: BaseViewController {
         reviewCollectionView.do {
             $0.backgroundColor = .mainWhite
             $0.tag = 1
+            $0.contentInset = UIEdgeInsets(top: 11, left: 24, bottom: 24, right: 21)
         }
         
         reviewFlowLayout.do {
@@ -117,9 +118,9 @@ final class HomeViewController: BaseViewController {
         }
         
         reviewCollectionView.snp.makeConstraints {
-            $0.width.equalTo(SizeLiterals.Screen.screenWidth - 48)
-            $0.top.equalTo(filterCollectionView.snp.bottom).offset(11)
-            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.width.equalTo(SizeLiterals.Screen.screenWidth)
+            $0.top.equalTo(filterCollectionView.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
         }
         
