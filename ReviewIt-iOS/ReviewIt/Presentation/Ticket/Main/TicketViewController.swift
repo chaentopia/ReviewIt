@@ -55,6 +55,10 @@ final class TicketViewController: BaseViewController {
             $0.setImage(.btnAddTicket, for: .normal)
         }
         
+        ticketCollectionView.do {
+            $0.backgroundColor = .mainWhite
+        }
+        
         ticketFlowLayout.do {
             $0.scrollDirection = .vertical
             $0.minimumLineSpacing = 16.adjustedHeight
