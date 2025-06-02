@@ -152,8 +152,9 @@ final class HomeViewController: BaseViewController {
         self.navigationController?.pushViewController(ticketDetailViewController, animated: true)
     }
     
-    private func showSheet() {
+    private func showSheet(index: Int) {
         let filterBottomSheetViewController = FilterBottomSheetViewController()
+        filterBottomSheetViewController.num = index
         if let sheet = filterBottomSheetViewController.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.largestUndimmedDetentIdentifier = .large
@@ -187,7 +188,7 @@ extension HomeViewController: UICollectionViewDataSource {
                 for: indexPath) as? HomeFilterCollectionViewCell else { return UICollectionViewCell() }
             cell.configTagCell(data: indexPath.row, isSelected: false) // false 값 변경 필요
             cell.onTap = {
-                self.showSheet()
+                self.showSheet(index: indexPath.row)
             }
             return cell
         case 1:
