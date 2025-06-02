@@ -37,6 +37,18 @@ enum StringLiterals {
         static let reviewButton = "작성 완료"
     }
     
+    enum TicketDetail {
+        static let title = "후기 보기"
+        static let titleLabel = "REVIEW it!"
+        static let seatLabel = "좌석"
+        static let type1 = "극의 유형은?"
+        static let type2 = "무대는 어땠나요?"
+        static let type3 = "가장 좋았던 배우는?"
+        static let type4 = "음향은 어땠나요?"
+        static let type5 = "내용은 어땠나요?"
+        static let type6 = "전반적으로 어땠나요?"
+    }
+    
     enum Home {
         static let title = "후기 구경하기"
     }

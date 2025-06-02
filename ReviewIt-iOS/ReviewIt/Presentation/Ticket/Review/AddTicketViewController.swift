@@ -19,7 +19,7 @@ final class AddTicketViewController: UIViewController {
     var seatNum = "1"
     
     let floorList = Array(1...5).map { "\($0)" }
-    let sectionList = ["OP", "A", "B", "C", "D", "E", "F", "G", "1", "2", "3", "4", "5", "6", "7", "8"]
+    let sectionList = ["-", "OP", "A", "B", "C", "D", "E", "F", "G", "1", "2", "3", "4", "5", "6", "7", "8"]
     let rowList = Array(0...50).map { "\($0)" }
     let numList = Array(1...999).map { "\($0)" }
     
@@ -285,6 +285,7 @@ final class AddTicketViewController: UIViewController {
         seatRowTextField.snp.makeConstraints {
             $0.height.equalTo(43)
         }
+        
         seatNumTextField.snp.makeConstraints {
             $0.height.equalTo(43)
         }
