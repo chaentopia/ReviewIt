@@ -136,6 +136,7 @@ final class TicketDetailViewController: BaseViewController {
         }
         
         reviewTagCollectionView.do {
+            $0.isHidden = !ticketData.reviewStatus
             $0.showsHorizontalScrollIndicator = false
             $0.showsVerticalScrollIndicator = false
             $0.backgroundColor = .mainWhite
@@ -238,6 +239,9 @@ final class TicketDetailViewController: BaseViewController {
             $0.top.equalTo(platformLabel.snp.bottom).offset(16)
             $0.leading.trailing.width.equalTo(ticketTitleLabel)
             $0.height.equalTo(ticketTitleLabel)
+            if !ticketData.reviewStatus {
+                $0.bottom.equalToSuperview().inset(21)
+            }
         }
         
         reviewTagCollectionView.snp.makeConstraints {
